@@ -48,6 +48,22 @@ test.describe('Consulta de pedido', ()=> {
     await expect(page.getByText('APROVADO')).toBeVisible()
   })
 
+  test('deve consultar um pedido reprovado', async ({ page }) => {
+
+    // Test Data
+    const order = 'VLO-PWW1GC'
+
+    // Act
+    await page.getByRole('textbox', { name: 'Número do Pedido' }).fill(order)
+    await page.getByRole('button', { name: 'Buscar Pedido' }).click()
+
+    // Assert
+    const orderCode = page.locator(`//p[text()='Pedido']/..//p[text()='${order}']`)
+    await expect(orderCode).toBeVisible({ timeout: 10000 })
+
+    await expect(page.getByText('REPROVADO')).toBeVisible()
+  })
+
   test('deve exibir mensagem quando o pedido não é encontrado', async ({ page }) => {
     // Test Data
     const order = generateOrderCode()
